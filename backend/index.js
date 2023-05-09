@@ -1,9 +1,9 @@
-// Import required modules
 const express = require('express');
 const bodyParser = require('body-parser');
 const { Pool } = require('pg');
 const cors = require('cors');
-// Create a pool to handle database connections
+
+
 const pool = new Pool({
   user: 'levani',
   host: 'localhost',
@@ -12,27 +12,39 @@ const pool = new Pool({
   port: 5432,
 });
 
-// Create express app
 const app = express();
 const corsOptions = {
   origin: '*',
 }
 app.use(cors(corsOptions));
-// Use body parser middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-// Define endpoints
+
+
 app.get('/inventories/:id', async (req, res) => {
 
   try {
     const { id } = req.params;
     const dataRecordById = id
     const start = 20 * dataRecordById;
+    console.log(req.query['location'])
 
-    const { rows } = await pool.query("SELECT * FROM inventories OFFSET ($1) LIMIT 20", [start])
+    if (req.query['location'] === 'მთავარი ოფისი' || req.query['location'] === 'კავეა გალერია' || req.query['location'] === 'კავეა თბილისი მოლი' || req.query['location'] === 'კავეა ისთ ფოინთი' || req.query['location'] === 'კავეა სითი მოლი') {
+      const { rows } = await pool.query("SELECT * FROM inventories ORDER BY location DESC OFFSET ($1) LIMIT 20", [start])
+      res.status(200).json(rows);
+      return;
+    } 
 
-    res.status(200).json(rows);
+    if(req.query['location'] === 'ყველა'){
+      const { rows } = await pool.query("SELECT * FROM inventories OFFSET ($1) LIMIT 20", [start])
+      res.status(200).json(rows);
+      return;
+    }
+
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
@@ -60,16 +72,13 @@ app.post('/inventories', async (req, res) => {
 
 app.delete('/inventories/:id', async (req, res) => {
   try {
-    // Extract the inventory ID from the request parameters
     const { id } = req.params;
 
-    // Delete the inventory from the database
     const { rowCount } = await pool.query(
       'DELETE FROM inventories WHERE id = $1',
       [id]
     );
 
-    // Check if the inventory was deleted
     if (rowCount === 0) {
       res.status(404).json({ message: 'Inventory not found' });
     } else {
