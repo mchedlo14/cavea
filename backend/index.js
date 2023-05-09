@@ -2,7 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { Pool } = require('pg');
-
+const cors = require('cors');
 // Create a pool to handle database connections
 const pool = new Pool({
   user: 'levani',
@@ -14,18 +14,24 @@ const pool = new Pool({
 
 // Create express app
 const app = express();
-
+const corsOptions = {
+  origin: '*',
+}
+app.use(cors(corsOptions));
 // Use body parser middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Define endpoints
-app.get('/inventories', async (req, res) => {
-  try {
-    // Get all inventories from the database
-    const { rows } = await pool.query('SELECT * FROM inventories');
+app.get('/inventories/:id', async (req, res) => {
 
-    // Return the inventories as a response
+  try {
+    const { id } = req.params;
+    const dataRecordById = id
+    const start = 20 * dataRecordById;
+
+    const { rows } = await pool.query("SELECT * FROM inventories OFFSET ($1) LIMIT 20", [start])
+
     res.status(200).json(rows);
   } catch (err) {
     console.error(err);
