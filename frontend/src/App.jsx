@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import TableCompo from './components/TableCompo'
 const App = () => {
-  const navigate = useNavigate()
-  useEffect(() => {
-    navigate('/0')
-  },[])
+
   return (
     <>
+    <TableCompo />
     </>
   )
 }

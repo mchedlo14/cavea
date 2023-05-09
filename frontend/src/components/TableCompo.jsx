@@ -2,21 +2,29 @@ import React, { useState, useEffect } from 'react'
 import { Table, Pagination } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
+import { Form } from 'react-bootstrap';
+import '../index.css'
 
 
 const TableCompo = () => {
     const [movieData, setMovieData] = useState([])
-    const [activePage, setActivePage] = useState(1);
-    const [url, setUrl] = useState('')
-    const [id, setId] = useState(0)
+    const [id, setId] = useState(0);
+    const [locationOptions] = useState(['მთავარი ოფისი', 'კავეა გალერია', 'კავეა თბილისი მოლი', 'კავეა ისთ ფოინთი', 'კავეა სითი მოლი']);
+
 
 
     const getMovies = async () => {
-        const res = await fetch(`http://localhost:3000/inventories/${id}`)
-        const data = await res.json()
-        setMovieData(data)
+
+        if (id < 0) {
+            setId(0)
+        } else {
+
+            const res = await fetch(`http://localhost:3000/inventories/${id}`)
+            const data = await res.json()
+            setMovieData(data)
+        }
     }
-    
+
 
     const handleDelete = async (id) => {
         console.log(id)
@@ -44,16 +52,35 @@ const TableCompo = () => {
             {
                 movieData.length < 0 ? <>Loading</>
                     :
-                    <>
-                        <Table striped bordered hover style={{padding:'20px'}}>
+                    <div className='container'>
+                        <div className='d-flex justify-content-between align-items-center mt-3'>
+                            <Form.Group>
+                                <Form.Control
+                                    as="select"
+                                    value={location}
+                                    onChange={(e) => setLocation(e.target.value)}
+                                >
+                                    <option value="">აირჩიეთ ადგილმდებაროება</option>
+                                    {locationOptions.map((option) => (
+                                        <option key={option} value={option}>
+                                            {option}
+                                        </option>
+                                    ))}
+                                </Form.Control>
+                            </Form.Group>
+
+                            <Button variant='success' onClick={() => navigate('/add')} className="custom-btn-width">დამატება</Button>
+
+
+                        </div>
+                        <Table striped bordered hover className='mt-3'>
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Price</th>
-                                    <th>Location</th>
-                                    <th>Operation</th>
-                                    <th><Button variant='success' onClick={() => navigate('/add')}>Add</Button></th>
+                                    <th>სახელი</th>
+                                    <th>ფასი</th>
+                                    <th>ადგილმდებარეობა</th>
+                                    <th>მოქმედება</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -70,7 +97,9 @@ const TableCompo = () => {
                         </Table>
 
                         <button onClick={() => setId(id + 1)}>next</button>
-                        <button onClick={() => setId(id - 1)}>previus</button></>
+                        <button onClick={() => setId(id - 1)}>previus</button>
+                    </div>
+
             }
         </>
     )
