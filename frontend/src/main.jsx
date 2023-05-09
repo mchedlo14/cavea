@@ -18,7 +18,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <BrowserRouter>
     <Routes>
       <Route path='/' element={<App />}/>
-      <Route path='/inventories' element={<TableCompo />}/>
+      {/* <Route path='/inventories' element={<TableCompo />}/> */}
       <Route path='/add' element={<FormComp />}/>
     </Routes> 
     </BrowserRouter>
