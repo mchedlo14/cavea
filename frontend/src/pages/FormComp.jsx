@@ -38,11 +38,11 @@ const FormComp = () => {
 
     console.log(typeof price)
     return (
-        <div className='container' style={{ width: '30%' }}>
+        <div className='container' style={{ width: '40%' }}>
 
             <Form onSubmit={handleSubmit} col-md-8 mx-auto>
                 <Form.Group>
-                    <Form.Label>Name</Form.Label>
+                    <Form.Label>სახელი</Form.Label>
                     <Form.Control
                         type="text"
                         placeholder="დასახელება"
@@ -62,7 +62,7 @@ const FormComp = () => {
                 </Form.Group>
 
                 <Form.Group>
-                    <Form.Label>Location</Form.Label>
+                    <Form.Label>ადგილმდებარეობა</Form.Label>
                     <Form.Control
                         as="select"
                         value={location}
@@ -78,7 +78,7 @@ const FormComp = () => {
                 </Form.Group>
 
                 <Button variant="primary" type="submit" className='mt-3'>
-                    Add Product
+                    დამატება
                 </Button>
             </Form>
         </div>
