@@ -13,7 +13,11 @@ const TableCompo = () => {
     const [movieData, setMovieData] = useState([]);
     const [location, setLocation] = useState('')
     const [id, setId] = useState(0);
+    const [column, setColumn] = useState('')
     const [locationOptions] = useState(['მთავარი ოფისი', 'კავეა გალერია', 'კავეა თბილისი მოლი', 'კავეა ისთ ფოინთი', 'კავეა სითი მოლი']);
+    const [filterOptions] = useState(['ფასი', 'სახელი']);
+
+
 
 
     const getMovies = async () => {
@@ -22,15 +26,16 @@ const TableCompo = () => {
         } else {
             const queryParam = location !== undefined ? `location=${location}` : '';
             const idQueryParam = id >= 0 ? `page=${id}` : '';
-            console.log(id)
             const limit = `limit=${20}`;
             //column name
-            const orderBy = `order_by=${location}`;
-            console.log(id)
-            // const orderingDirection = '&ordering_direction=asc';
-            const res = await fetch(`http://localhost:4000/api/v1/inventory-management/inventories?${idQueryParam}&${limit}&order_by=&ordering_direction=asc&${queryParam}`, { method: 'GET' });
+            const orderBy = column !== undefined ? `order_by=${column}`:'';
+
+            console.log(orderBy)
+
+            const res = await fetch(`http://localhost:4000/api/v1/inventory-management/inventories?${idQueryParam}&${limit}&${orderBy}&ordering_direction=asc&${queryParam}`, { method: 'GET' });
             const data = await res.json();
             setMovieData(data.data);
+            console.log(data.data)
         }
     }
 
@@ -54,13 +59,25 @@ const TableCompo = () => {
 
     useEffect(() => {
         getMovies()
-    }, [id, location])
+    }, [id, location,column])
 
 
 
     const handleSelectChange = (e) => {
         // console.log(e.target.value)
         setLocation(e.target.value)
+    }
+
+    const handleFilterSelect = (e) => {
+       
+        console.log(e.target.value)
+        if(e.target.value === 'ფასი'){
+            setColumn('price')
+        }else if(e.target.value === 'სახელი'){
+            setColumn('name')
+        }else{
+            setColumn(e.target.value)
+        }
     }
     return (
         <>
@@ -69,21 +86,42 @@ const TableCompo = () => {
                     :
                     <div className='container'>
                         <div className='d-flex justify-content-between align-items-center mt-3'>
-                            <Form.Group>
-                                <Form.Label>აირჩიეთ ადგილმდებარეობა</Form.Label>
-                                <Form.Control
-                                    as="select"
-                                    value={location}
-                                    onChange={(e) => handleSelectChange(e)}
-                                >
-                                    <option value="">ყველა</option>
-                                    {locationOptions.map((option) => (
-                                        <option key={option} value={option}>
-                                            {option}
-                                        </option>
-                                    ))}
-                                </Form.Control>
-                            </Form.Group>
+                            <div>
+
+                                <Form.Group>
+                                    <Form.Label>აირჩიეთ ადგილმდებარეობა</Form.Label>
+                                    <Form.Control
+                                        as="select"
+                                        value={location}
+                                        onChange={(e) => handleSelectChange(e)}
+                                    >
+                                        <option value="">ყველა</option>
+                                        {locationOptions.map((option) => (
+                                            <option key={option} value={option}>
+                                                {option}
+                                            </option>
+                                        ))}
+                                    </Form.Control>
+                                </Form.Group>
+
+                                <Form.Group className='mt-3'>
+                                    <Form.Label> ფილტრაცია</Form.Label>
+                                    <Form.Control
+                                        as="select"
+                                        value={location}
+                                        onChange={(e) => handleFilterSelect(e)}
+                                    >
+                                        <option value="">ფილტრაცია</option>
+                                        {filterOptions.map((option) => (
+                                            <option key={option} value={option}>
+                                                {option}
+                                            </option>
+                                        ))}
+                                    </Form.Control>
+                                </Form.Group>
+
+                            </div>
+
 
                             <Button variant='success' onClick={() => navigate('/add')} className="custom-btn-width">დამატება</Button>
 
@@ -114,8 +152,10 @@ const TableCompo = () => {
 
                         {/* <PaginationComp setId={setId} id={id} totalItems={movieData.length} /> */}
 
-                        <button onClick={() => setId(id + 1)}>next</button>
-                        <button onClick={() => setId(id - 1)}>previus</button>
+                        <>
+                            <Button variant="primary" onClick={() => setId(id - 1)}>წინა</Button>{' '}
+                            <Button variant="primary" onClick={() => setId(id + 1)}>შემდეგი</Button>{' '}
+                        </>
                     </div>
 
             }
