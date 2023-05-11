@@ -11,7 +11,7 @@ import Loader from './Loader/Loader';
 
 const TableCompo = () => {
     const [movieData, setMovieData] = useState([]);
-    const [location,setLocation] = useState('ყველა')
+    const [location, setLocation] = useState('ყველა')
     const [id, setId] = useState(0);
     const [locationOptions] = useState(['მთავარი ოფისი', 'კავეა გალერია', 'კავეა თბილისი მოლი', 'კავეა ისთ ფოინთი', 'კავეა სითი მოლი']);
 
@@ -21,16 +21,16 @@ const TableCompo = () => {
             setId(0);
         } else {
             const queryParam = location ? `&location=${location}` : '';
-            const idQueryParam = id ? `?page=${id}`:'';
+            const idQueryParam = id ? `?page=${id}` : '';
             const limit = `&limit=${20}`;
-            const res = await fetch(`http://localhost:4000/api/v1/inventory-management/inventories${idQueryParam}${limit}${queryParam}&order_by=&ordering_direction=asc`);
+            // const res = await fetch(`http://localhost:4000/api/v1/inventory-management/inventories${idQueryParam}${limit}${queryParam}&order_by=&ordering_direction=asc`, { method: 'GET' });
+            const res = await fetch(`http://localhost:4000/api/v1/inventory-management/inventories?page=0&limit=20&order_by=&ordering_direction=asc&location=`)
             const data = await res.json();
-            setMovieData(data);
-            console.log(data)
+            setMovieData(data.data);
+            console.log(data.data);
         }
     }
 
-    console.log(location)
     const handleDelete = async (id) => {
         console.log(id)
         // try {
@@ -51,18 +51,18 @@ const TableCompo = () => {
 
     useEffect(() => {
         getMovies()
-    }, [id,location])
+    }, [id, location])
 
 
 
     const handleSelectChange = (e) => {
-        console.log(e.target.value)
+        // console.log(e.target.value)
         setLocation(e.target.value)
     }
     return (
         <>
             {
-                movieData.length === 0 ? <Loader movieData={movieData}/>
+                movieData.length === 0 ? <Loader movieData={movieData} />
                     :
                     <div className='container'>
                         <div className='d-flex justify-content-between align-items-center mt-3'>
@@ -97,7 +97,7 @@ const TableCompo = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* {movieData.data.map(product => (
+                                {movieData.map(product => (
                                     <tr key={product.id}>
                                         <td>{product.id}</td>
                                         <td>{product.name}</td>
@@ -105,11 +105,11 @@ const TableCompo = () => {
                                         <td>{product.location}</td>
                                         <td><Button variant="danger" onClick={() => handleDelete(product.id)}>წაშლა</Button>{' '}</td>
                                     </tr>
-                                ))} */}
+                                ))}
                             </tbody>
                         </Table>
 
-                        <PaginationComp setId={setId} id={id} totalItems={movieData.length}/>
+                        <PaginationComp setId={setId} id={id} totalItems={movieData.length} />
 
                         <button onClick={() => setId(id + 1)}>next</button>
                         <button onClick={() => setId(id - 1)}>previus</button>
