@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import '../index.css'
 import PaginationComp from './Pagination/PaginationComp';
+import Loader from './Loader/Loader';
 
 
 
@@ -61,7 +62,7 @@ const TableCompo = () => {
     return (
         <>
             {
-                movieData.length === 0 ? <>Loading</>
+                movieData.length === 0 ? <Loader movieData={movieData}/>
                     :
                     <div className='container'>
                         <div className='d-flex justify-content-between align-items-center mt-3'>
