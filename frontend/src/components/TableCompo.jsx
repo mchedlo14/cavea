@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Pagination } from 'react-bootstrap'
+import { Table } from 'react-bootstrap'
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import '../index.css'
-import PaginationComp from './Pagination/PaginationComp';
 import Loader from './Loader/Loader';
 
 
@@ -22,19 +21,24 @@ const TableCompo = () => {
 
     const getMovies = async () => {
         if (id < 0) {
-            setId(1);
+            setId(0);
         } else {
             const queryParam = location !== undefined ? `location=${location}` : '';
             const idQueryParam = id >= 0 ? `page=${id}` : '';
             const limit = `limit=${20}`;
             //column name
-            const orderBy = column !== undefined ? `order_by=${column}`:'';
+            const orderBy = column !== undefined ? `order_by=${column}` : '';
 
             console.log(orderBy)
 
             const res = await fetch(`http://localhost:4000/api/v1/inventory-management/inventories?${idQueryParam}&${limit}&${orderBy}&ordering_direction=asc&${queryParam}`, { method: 'GET' });
             const data = await res.json();
-            setMovieData(data.data);
+            if((data.data).length === 0){
+                setLocation('ყველა')
+            }else{
+
+                setMovieData(data.data);
+            }
             console.log(data.data)
         }
     }
@@ -59,7 +63,7 @@ const TableCompo = () => {
 
     useEffect(() => {
         getMovies()
-    }, [id, location,column])
+    }, [id, location, column])
 
 
 
@@ -69,13 +73,13 @@ const TableCompo = () => {
     }
 
     const handleFilterSelect = (e) => {
-       
+
         console.log(e.target.value)
-        if(e.target.value === 'ფასი'){
+        if (e.target.value === 'ფასი') {
             setColumn('price')
-        }else if(e.target.value === 'სახელი'){
+        } else if (e.target.value === 'სახელი') {
             setColumn('name')
-        }else{
+        } else {
             setColumn(e.target.value)
         }
     }
@@ -150,10 +154,12 @@ const TableCompo = () => {
                             </tbody>
                         </Table>
 
-                        {/* <PaginationComp setId={setId} id={id} totalItems={movieData.length} /> */}
 
                         <>
-                            <Button variant="primary" onClick={() => setId(id - 1)}>წინა</Button>{' '}
+                            <Button variant="primary" onClick={() =>(
+                                 setId(id - 1),
+                                 console.log(id)
+                            )}>წინა</Button>{' '}
                             <Button variant="primary" onClick={() => setId(id + 1)}>შემდეგი</Button>{' '}
                         </>
                     </div>
