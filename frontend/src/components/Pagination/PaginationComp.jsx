@@ -34,19 +34,21 @@ const PaginationComp = ({ setId, id, totalItems }) => {
 
     return (
         <Pagination>
-            <Pagination.First onClick={() => setActivePage(1)} />
-            <Pagination.Prev
-                onClick={() => setActivePage(activePage > 1 ? activePage - 1 : 1)}
-                disabled={activePage === 1}
-            />
-            {getPageNumbers()}
-            <Pagination.Next
-                onClick={() =>
-                    setActivePage(activePage < totalPages ? activePage + 1 : totalPages)
-                }
-                disabled={activePage === totalPages}
-            />
-            <Pagination.Last onClick={() => setActivePage(totalPages)} />
+            <Pagination.First />
+            <Pagination.Prev />
+            <Pagination.Item>{1}</Pagination.Item>
+            <Pagination.Ellipsis />
+
+            <Pagination.Item>{10}</Pagination.Item>
+            <Pagination.Item>{11}</Pagination.Item>
+            <Pagination.Item active>{12}</Pagination.Item>
+            <Pagination.Item>{13}</Pagination.Item>
+            <Pagination.Item disabled>{14}</Pagination.Item>
+
+            <Pagination.Ellipsis />
+            <Pagination.Item>{20}</Pagination.Item>
+            <Pagination.Next />
+            <Pagination.Last />
         </Pagination>
     );
 };

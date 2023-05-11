@@ -16,31 +16,33 @@ const TableCompo = () => {
 
 
     const getMovies = async () => {
-
         if (id < 0) {
-            setId(0)
+            setId(0);
         } else {
-            const queryParam = location ? `?location=${location}` : '';
-            const res = await fetch(`http://localhost:3000/inventories/${id}${queryParam}`)
-            const data = await res.json()
-            setMovieData(data)
+            const queryParam = location ? `&location=${location}` : '';
+            const idQueryParam = id ? `?page=${id}`:'';
+            const limit = `&limit=${20}`;
+            const res = await fetch(`http://localhost:4000/api/v1/inventory-management/inventories${idQueryParam}${limit}${queryParam}&order_by=&ordering_direction=asc`);
+            const data = await res.json();
+            setMovieData(data);
+            console.log(data)
         }
     }
 
-
+    console.log(location)
     const handleDelete = async (id) => {
         console.log(id)
-        try {
-            const res = await fetch(`http://localhost:3000/inventories/${id}`, {
-                method: 'DELETE',
-            });
-            if (res.ok) {
-                const newMovieData = movieData.filter((product) => product.id !== id);
-                setMovieData(newMovieData);
-            }
-        } catch (err) {
-            console.error(err);
-        }
+        // try {
+        //     const res = await fetch(`http://localhost:3000/inventories/${id}`, {
+        //         method: 'DELETE',
+        //     });
+        //     if (res.ok) {
+        //         const newMovieData = movieData.filter((product) => product.id !== id);
+        //         setMovieData(newMovieData);
+        //     }
+        // } catch (err) {
+        //     console.error(err);
+        // }
     }
 
     const navigate = useNavigate()
@@ -94,7 +96,7 @@ const TableCompo = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {movieData.map(product => (
+                                {/* {movieData.data.map(product => (
                                     <tr key={product.id}>
                                         <td>{product.id}</td>
                                         <td>{product.name}</td>
@@ -102,7 +104,7 @@ const TableCompo = () => {
                                         <td>{product.location}</td>
                                         <td><Button variant="danger" onClick={() => handleDelete(product.id)}>წაშლა</Button>{' '}</td>
                                     </tr>
-                                ))}
+                                ))} */}
                             </tbody>
                         </Table>
 

@@ -2,39 +2,41 @@ import React, { useEffect, useState } from 'react'
 import { Form, Button } from 'react-bootstrap';
 const FormComp = () => {
     const [name, setName] = useState('');
-    const [price, setPrice] = useState('');
+    const [price, setPrice] = useState();
     const [location, setLocation] = useState('');
     const [locationOptions] = useState(['მთავარი ოფისი', 'კავეა გალერია', 'კავეა თბილისი მოლი', 'კავეა ისთ ფოინთი', 'კავეა სითი მოლი']);
     const [error, setError] = useState(null);
 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!name || !price || !location) {
+        if (!name || isNaN(price) || !location) {
             setError('Please fill in all the fields');
-            alert('please fill all field')
             return;
         }
 
         try {
-            const response = await fetch('http://localhost:3000/inventories', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ name, price, location }),
+            const response = await fetch('http://localhost:4000/api/v1/inventory-management/inventories', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, price, location }),
             });
             const data = await response.json();
             console.log(data);
-          } catch (err) {
+        } catch (err) {
             console.error(err);
             setError('Error adding product');
-          }
+        }
     };
 
     useEffect(() => {
         console.log(location)
     }, [location])
+
+    console.log(typeof price)
     return (
         <div className='container' style={{ width: '30%' }}>
 
@@ -55,7 +57,7 @@ const FormComp = () => {
                         type="number"
                         placeholder="შეიყვანეთ ფასი"
                         value={price}
-                        onChange={(e) => setPrice(e.target.value)}
+                        onChange={(e) => setPrice(parseInt(e.target.value))}
                     />
                 </Form.Group>
 
