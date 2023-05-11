@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import '../../index.css';
-import PuffLoader from 'react-spinners'
+import PuffLoader from 'react-spinners/PuffLoader'
 const Loader = ({ movieData }) => {
     const [loadin, setLoading] = useState(false)
 
