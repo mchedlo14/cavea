@@ -38,7 +38,7 @@ const FormComp = () => {
 
     console.log(typeof price)
     return (
-        <div className='container' style={{ width: '40%' }}>
+        <div className='container' style={{ width: '30%' }}>
 
             <Form onSubmit={handleSubmit} col-md-8 mx-auto>
                 <Form.Group>

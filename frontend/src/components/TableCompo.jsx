@@ -35,6 +35,7 @@ const TableCompo = () => {
             const data = await res.json();
             if((data.data).length === 0){
                 setLocation('ყველა')
+                
             }else{
 
                 setMovieData(data.data);
@@ -45,17 +46,17 @@ const TableCompo = () => {
 
     const handleDelete = async (id) => {
         console.log(id)
-        // try {
-        //     const res = await fetch(`http://localhost:3000/inventories/${id}`, {
-        //         method: 'DELETE',
-        //     });
-        //     if (res.ok) {
-        //         const newMovieData = movieData.filter((product) => product.id !== id);
-        //         setMovieData(newMovieData);
-        //     }
-        // } catch (err) {
-        //     console.error(err);
-        // }
+        try {
+            const res = await fetch(`http://localhost:4000/api/v1/inventory-management/inventories/${id}`, {
+                method: 'DELETE',
+            });
+            if (res.ok) {
+                const newMovieData = movieData.filter((product) => product.id !== id);
+                setMovieData(newMovieData);
+            }
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     const navigate = useNavigate()
@@ -86,7 +87,7 @@ const TableCompo = () => {
     return (
         <>
             {
-                movieData.length == 0 ? <Loader movieData={movieData} />
+                movieData.length == 0 ? <Loader movieData={movieData} /> 
                     :
                     <div className='container'>
                         <div className='d-flex justify-content-between align-items-center mt-3'>

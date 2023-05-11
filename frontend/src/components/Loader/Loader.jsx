@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import '../../index.css';
 import PuffLoader from 'react-spinners/PuffLoader'
+import Button from 'react-bootstrap/Button';
+
 const Loader = ({ movieData }) => {
     const [loadin, setLoading] = useState(false)
 
